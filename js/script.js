@@ -32,19 +32,30 @@ generateElm.addEventListener("click", () => {
   );
 });
 
+// Copy password to clipboard
+clipboardElm.addEventListener("click", () => {
+  const textarea = document.createElement("textarea");
+  const password = resultElm.innerText;
+
+  if (!password) {
+    return;
+  }
+
+  textarea.value = password;
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  textarea.remove();
+  alert("已複製密碼到剪貼簿");
+});
+
 // Generate password function
 function genPass(upper, lower, number, symbol, length) {
   let generatedPassword = "";
-
   const typesCount = upper + lower + number + symbol;
-
-  // console.log("typesCount: ", typesCount);
-
   const typesArr = [{ upper }, { lower }, { number }, { symbol }].filter(
     item => Object.values(item)[0]
   );
-
-  // console.log("typesArr: ", typesArr);
 
   if (typesCount === 0) {
     return "";
@@ -53,9 +64,6 @@ function genPass(upper, lower, number, symbol, length) {
   for (let i = 0; i < length; i += typesCount) {
     typesArr.forEach(type => {
       const funcName = Object.keys(type)[0];
-
-      // console.log("funcName: ", funcName);
-
       generatedPassword += randFunc[funcName]();
     });
   }
